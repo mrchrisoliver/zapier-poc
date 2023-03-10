@@ -21,7 +21,11 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $user = auth()->user();
+    $zapierHook = $user->subscriptions->where('name', 'Zapier')->first()->post_url;
+
+    return view('dashboard')
+        ->with(['zapierHook' => $zapierHook]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -34,10 +38,9 @@ require __DIR__.'/auth.php';
 
 
 Route::get('/test', function (Request $request) {
-    $hook = WebhookCall::create()
-        ->url('https://zapier.com/hooks/standard/14719677/46ab5f7abf0c42c8a9de1677e820a82e/')
-        ->payload(['subscription' => '26885844'])
-        ->useSecret('ixSThtz9I7ctWVuricmuhsIjcaGNdMMcAbmW0BZi')
-        ->dispatch();
-    dd($hook);
+
+    $user = auth()->user();
+    $zapierHook =  $user->subscriptions->where('name', 'Zapier')->first()->post_url;
+
+    return $zapierHook;
 });

@@ -39,10 +39,5 @@ Route::middleware('auth:api')->delete('/hook/unsub', function (Request $request)
 Route::middleware('auth:api')->get('/hook/data', function (Request $request) {
     \Illuminate\Support\Facades\Log::info('zapier-data', $request->all());
 
-    return response()->json(
-        [
-            ['name' => "chris"],
-            ['name' => "Sam"],
-        ]
-    );
+    return response()->json(\App\Models\Client::all());
 });
